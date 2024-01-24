@@ -12,15 +12,6 @@ class UserControllerTest extends TestCase
 
     use RefreshDatabase, WithFaker;
 
-    public function testDatabaseConnection()
-    {
-        $connection = config('database.default');
-        if ($connection === 'mysql_testing') {
-            $this->assertTrue(true);
-        } else {
-            $this->assertTrue(false);
-        }
-    }
 
     public function testCreateUserWeb()
     {
@@ -90,8 +81,8 @@ class UserControllerTest extends TestCase
     }
     public function testEditUsers()
     {
-        $user=User::factory()->create();
-        $response = $this->get("/users/". $user->id."/edit");
+        $user = User::factory()->create();
+        $response = $this->get("/users/" . $user->id . "/edit");
         $response->assertStatus(200);
         $response->assertViewIs('user.edit');
     }
@@ -108,7 +99,7 @@ class UserControllerTest extends TestCase
         $response = $this->put("/users/{$user->id}", $updatedUserData);
 
         $response->assertStatus(302);
-        $response->assertRedirect('/users'); 
+        $response->assertRedirect('/users');
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,

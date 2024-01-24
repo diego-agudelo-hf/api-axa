@@ -3,7 +3,6 @@
 namespace Tests\Feature\api;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -16,7 +15,7 @@ class UserControllerTest extends TestCase
     public function testDatabaseConnection()
     {
         $connection = config('database.default');
-        if ($connection === 'mysql_testing') {
+        if ($connection === env('DB_CONNECTION_TESTING') ? env('DB_CONNECTION_TESTING') : '') {
             $this->assertTrue(true);
         } else {
             $this->assertTrue(false);
