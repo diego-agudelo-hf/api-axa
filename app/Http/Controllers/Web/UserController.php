@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserWebRequest;
+use App\Http\Requests\UpdateUserWebRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
@@ -60,7 +61,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        
+
         if (!$user) {
             return view("errors.404");
         }
@@ -90,7 +91,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserWebRequest $request, $id)
     {
         try {
             $user = User::find($id);
@@ -101,7 +102,9 @@ class UserController extends Controller
             $user->email = $request->input('email');
             $user->save();
         } catch (\Exception $th) {
-            return redirect()->route("users.edit")->withErrors('Ocurrió un error al actualizar el usuario' . $th->getMessage());
+            return redirect()->back()->withErrors(
+                'Ocurrió un error al actualizar el usuario:' . $th->getMessage()
+            );
         }
         return redirect('users');
     }

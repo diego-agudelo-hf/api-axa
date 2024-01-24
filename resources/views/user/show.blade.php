@@ -1,28 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Actualizar usuario')
+@section('title', 'Usuario')
 
 @section('content')
     <div class="d-flex justify-content-center mt-5 ">
-        
-            <h2>datos Usuario</h2>
-         
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com"
-                    value="{{ $user->email }}" required>
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ asset('images/user.png') }}" alt="Usuario">
+            <div class="card-body">
+                <p> <b>Email:</b>{{ $user->email }}</p>
+                <b>Nombre:</b>{{ $user->name }}</p>
             </div>
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre</label>
-                <input type="text" name="name" class="form-control" id="name" placeholder="Digite su nombre"
-                    value="{{ $user->name }}" required>
-            </div>
-            
             <div class="d-flex justify-content-center ">
-                <a class="btn btn-warning text-center " href="{{ route('users.index') }}">Cancelar</a>
-
-                <button type="submit" class="btn btn-success text-center">Actualizar</button>
+                <a class="btn btn-warning text-center  m-3 " href="{{ route('users.index') }}">Atras</a>
             </div>
-
-
+        </div>
     </div>
 @endsection

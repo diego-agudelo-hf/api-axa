@@ -90,11 +90,15 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-        'testing' => [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ],
+        
+        'mysql_testing' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_TESTING', '127.0.0.1'),
+            'port' => env('DB_PORT_TESTING', '3306'),
+            'database' => env('DB_DATABASE_TESTING', 'forge'),
+            'username' => env('DB_USERNAME_TESTING', 'forge'),
+            'password' => env('DB_PASSWORD_TESTING', ''),
+    ],
     ],
 
     /*

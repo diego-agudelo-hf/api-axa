@@ -3,6 +3,7 @@
 namespace Tests\Feature\api;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,17 +13,23 @@ class UserControllerTest extends TestCase
 
     use RefreshDatabase, WithFaker;
 
-    // Tests index.
+    public function testDatabaseConnection()
+    {
+        $connection = config('database.default');
+        if ($connection === 'mysql_testing') {
+            $this->assertTrue(true);
+        } else {
+            $this->assertTrue(false);
+        }
+    }
 
-    public function databaseWithThreeUsers()
+    // Tests index.
+    public function testDatabaseWithThreeUsers()
     {
         User::factory()->count(3)->create();
-
         $response = $this->get('/api/users');
-
         $response->assertStatus(200);
         $this->assertCount(3, $response->json());
-
         $response->assertJsonStructure([
             '*' => [
                 'id',
@@ -37,18 +44,16 @@ class UserControllerTest extends TestCase
     }
 
 
-    /** @test */
-    public function databaseWithoutUser()
+    public function testDatabaseWithoutUser()
     {
         $response = $this->get('/api/users');
         $response->assertStatus(200);
         $users = $response->json();
-        $this->assertCount(0, $users);
+        $this->assertEmpty($users);
     }
-    // Test store.
 
-    /** @test */
-    public function storeUser()
+    // Test store.
+    public function testStoreUser()
     {
         $userData = [
             'name' => 'Diego A',
@@ -74,7 +79,7 @@ class UserControllerTest extends TestCase
     }
 
     /** @test */
-    public function notAllArgumentsAreSent()
+    public function testNotAllArgumentsAreSent()
     {
         $response = $this->json('POST', '/api/users', []);
 
@@ -97,15 +102,11 @@ class UserControllerTest extends TestCase
 
     // Tests show.
 
-    /** @test */
-    public function getUserById()
+    public function testGetUserById()
     {
         $user = User::factory()->create();
-
         $response = $this->get("/api/users/{$user->id}");
-
         $response->assertStatus(200);
-
         $response->assertJson([
             'id' => $user->id,
             'name' => $user->name,
@@ -113,13 +114,10 @@ class UserControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function retrieveUserThatDoesNotExistGet()
+    public function testRetrieveUserThatDoesNotExistGet()
     {
         $response = $this->get('/api/users/1000');
-
         $response->assertStatus(404);
-
         $response->assertJson([
             'error' => 'Recurso no encontrado',
         ]);
@@ -127,11 +125,9 @@ class UserControllerTest extends TestCase
 
     // Tests update.
 
-    /** @test */
-    public function updateSuccessfully()
+    public function testUpdateSuccessfully()
     {
         $user = User::factory()->create();
-
         $newData = [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
@@ -152,8 +148,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals($newData['email'], $user->email);
     }
 
-    /** @test */
-    public function retrieveUserThatDoesNotExistPut()
+    public function testRetrieveUserThatDoesNotExistPut()
     {
         $newData = [
             'name' => $this->faker->name,
@@ -170,13 +165,10 @@ class UserControllerTest extends TestCase
 
     // Test destroy.
 
-    /** @test */
-    public function deleteSuccessfully()
+    public function testDeleteSuccessfully()
     {
         $user = User::factory()->create();
-
         $response = $this->json('DELETE', "/api/users/{$user->id}");
-
         $response->assertStatus(200)
             ->assertJson([
                 'message' => 'Usuario eliminado',
@@ -185,8 +177,7 @@ class UserControllerTest extends TestCase
         $this->assertSoftDeleted('users', ['id' => $user->id]);
     }
 
-    /** @test */
-    public function retrieveUserThatDoesNotExistDelete()
+    public function testRetrieveUserThatDoesNotExistDelete()
     {
         $response = $this->json('DELETE', '/api/users/999');
 
@@ -195,37 +186,4 @@ class UserControllerTest extends TestCase
                 'error' => 'Recurso no encontrado',
             ]);
     }
-
-
-    // public function testCreateUserThroughWebAndApi()
-    // {
-    //     $webResponse = $this->post('/users', [
-    //         '_token' => csrf_token(),
-    //         'name' => 'Diego a',
-    //         'email' => 'prueba@example.com',
-    //         'password' => 'contraseña',
-    //     ]);
-    //     $webResponse->assertStatus(302);
-
-    //     $this->assertDatabaseHas('users', [
-    //         'name' => 'Diego a',
-    //         'email' => 'prueba@example.com',
-    //     ]);
-
-    //     $apiResponse = $this->json('POST', '/api/users', [
-    //         'name' => 'Diego a',
-    //         'email' => 'prueba@example.com',
-    //         'password' => 'contraseña',
-    //     ]);
-
-    //     $apiResponse->assertStatus(201);
-
-    //     $apiResponse->assertJson([
-    //         'message' => 'Usuario creado.',
-    //         'data' => [
-    //             'name' => 'Diego a',
-    //             'email' => 'prueba@example.com',
-    //         ],
-    //     ]);
-    // }
 }

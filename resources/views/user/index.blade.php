@@ -21,16 +21,21 @@
                         <td class="col-3">{{ $user->email }}</td>
                         <td>{{ $user->created_at }}</td>
                         <td>
-                            <form action="{{ url('users', $user->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
 
-                            <a href="{{ route('users.edit', $user->id) }}"> <button
-                                    class="btn btn-primary">Editar</button></a>
-                            <a href="{{ route('users.show', $user->id) }}"> <button 
-                                    class="btn btn-primary">Ver</button></a>
+
+                            <div class="btn-group" role="group" aria-label="Basic example">
+
+                                <form action="{{ url('users', $user->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger m-2">Eliminar</button>
+                                </form>
+
+                                <a href="{{ route('users.edit', $user->id) }}"> <button
+                                        class="btn btn-primary m-2">Editar</button></a>
+                                <a href="{{ route('users.show', $user->id) }}"> <button
+                                        class="btn btn-primary m-2">Ver</button></a>
+                            </div>
 
                         </td>
                     </tr>

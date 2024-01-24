@@ -11,7 +11,7 @@
             <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com"
-                    value="{{ old('email') }}" required>
+                    value="{{ old('email') }}" >
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
